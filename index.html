@@ -2,18 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AFK Clicker</title>
+  <title>Blob Clicker</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <h1>AFK Clicker</h1>
+  <h1>Blob Clicker</h1>
 
-  <!-- Cookie Counter -->
-  <p>Cookies: <span id="cookie-counter">0</span></p>
+  <!-- Size Counter -->
+  <p>Size: <span id="size-counter">0</span></p>
 
   <!-- Clickable Blob PNG -->
-  <img id="cookie-btn" src="Normal.png" alt="Click me" width="150" style="cursor:pointer;" />
+  <div id="blob-container">
+    <img id="blob-btn" src="Normal.png" alt="Click me" />
+  </div>
+
+  <!-- Particle container -->
+  <div id="particles"></div>
 
   <!-- Upgrade Section -->
   <div id="upgrade-container">
@@ -21,6 +26,9 @@
     <button id="upgrade-btn">Buy CPS Upgrade (Cost: <span id="upgrade-cost">10</span>)</button>
     <p>CPS: <span id="cps-display">0</span></p>
   </div>
+
+  <!-- Milestone popup -->
+  <div id="milestone-popup"></div>
 
   <script src="script.js"></script>
 </body>
