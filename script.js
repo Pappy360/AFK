@@ -16,6 +16,10 @@ let upgradeCost = 10;
 cookieBtn.addEventListener('click', () => {
     cookies++;
     updateCounter();
+
+    // Trigger jump animation
+    cookieBtn.classList.add('jump');
+    setTimeout(() => cookieBtn.classList.remove('jump'), 400);
 });
 
 // Update counter display
@@ -32,9 +36,9 @@ setInterval(() => {
 // Upgrade button functionality
 upgradeBtn.addEventListener('click', () => {
     if (cookies >= upgradeCost) {
-        cookies -= upgradeCost;          // Deduct cost
-        cookiesPerSecond += 1;           // Increase CPS
-        upgradeCost = Math.floor(upgradeCost * 1.5); // Increase next cost
+        cookies -= upgradeCost;          
+        cookiesPerSecond += 1;           
+        upgradeCost = Math.floor(upgradeCost * 1.5); 
         updateCounter();
         updateUpgradeDisplay();
     } else {
