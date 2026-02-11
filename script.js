@@ -25,9 +25,12 @@ blobBtn.addEventListener('click', () => {
 
     // Particle effect
     createParticle();
-    
-    // Check milestone
+
+    // Milestones
     checkMilestone();
+
+    // Update blob emotion
+    updateBlobEmotion();
 });
 
 // Update counter
@@ -49,6 +52,9 @@ upgradeBtn.addEventListener('click', () => {
         upgradeCost = Math.floor(upgradeCost * 1.5);
         updateCounter();
         updateUpgradeDisplay();
+
+        // Show amazed emotion briefly
+        showTemporaryEmotion('Amazed.png', 800);
     } else {
         alert("Not enough size!");
     }
@@ -64,21 +70,39 @@ function createParticle() {
     const particle = document.createElement('div');
     particle.classList.add('particle');
     particle.style.left = Math.random() * blobBtn.width + "px";
-    particle.textContent = "⭐"; // can be any symbol
+    particle.textContent = "⭐";
     particlesContainer.appendChild(particle);
 
-    setTimeout(() => {
-        particle.remove();
-    }, 1000);
+    setTimeout(() => particle.remove(), 1000);
 }
 
 // ===== MILESTONE POPUPS =====
 function checkMilestone() {
-    if (size % 100 === 0) { // every 100 size
+    if (size % 100 === 0 && size !== 0) {
         milestonePopup.textContent = `Milestone reached! Size: ${size}`;
         milestonePopup.style.opacity = 1;
+        showTemporaryEmotion('Happy.png', 1200); // happy emotion
         setTimeout(() => milestonePopup.style.opacity = 0, 2000);
     }
+}
+
+// ===== BLOB EMOTIONS =====
+function updateBlobEmotion() {
+    // Random chance for Sus emotion
+    if (Math.random() < 0.02) {
+        showTemporaryEmotion('Sus.png', 1000);
+    }
+    // Scared on fast clicks (optional)
+    // Else default to normal
+}
+
+function showTemporaryEmotion(src, duration = 1000) {
+    blobBtn.src = src;
+    blobBtn.classList.add('shake'); // add shake effect
+    setTimeout(() => {
+        blobBtn.src = 'Normal.png';
+        blobBtn.classList.remove('shake');
+    }, duration);
 }
 
 // ===== LOCAL STORAGE =====
