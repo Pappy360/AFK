@@ -1,83 +1,110 @@
-// ===== COOKIE CLICKER CORE =====
-let cookies = 0;
-let cookiesPerSecond = 0;
+// ===== SIZE CLICKER CORE =====
+let size = 0;
+let sizePerSecond = 0;
 
 // DOM elements
-const cookieBtn = document.getElementById('cookie-btn');
-const cookieCounter = document.getElementById('cookie-counter');
+const blobBtn = document.getElementById('blob-btn');
+const sizeCounter = document.getElementById('size-counter');
 const upgradeBtn = document.getElementById('upgrade-btn');
 const upgradeCostDisplay = document.getElementById('upgrade-cost');
 const cpsDisplay = document.getElementById('cps-display');
+const particlesContainer = document.getElementById('particles');
+const milestonePopup = document.getElementById('milestone-popup');
 
 // Initial upgrade cost
 let upgradeCost = 10;
 
-// Click to get cookies
-cookieBtn.addEventListener('click', () => {
-    cookies++;
+// ===== CLICK BLOB =====
+blobBtn.addEventListener('click', () => {
+    size++;
     updateCounter();
 
-    // Trigger jump animation
-    cookieBtn.classList.add('jump');
-    setTimeout(() => cookieBtn.classList.remove('jump'), 400);
+    // Jump animation
+    blobBtn.classList.add('jump');
+    setTimeout(() => blobBtn.classList.remove('jump'), 400);
+
+    // Particle effect
+    createParticle();
+    
+    // Check milestone
+    checkMilestone();
 });
 
-// Update counter display
+// Update counter
 function updateCounter() {
-    cookieCounter.textContent = cookies;
+    sizeCounter.textContent = size;
 }
 
-// Auto-increment cookies per second
+// ===== AUTO-INCREMENT (CPS) =====
 setInterval(() => {
-    cookies += cookiesPerSecond;
+    size += sizePerSecond;
     updateCounter();
 }, 1000);
 
-// Upgrade button functionality
+// ===== UPGRADES =====
 upgradeBtn.addEventListener('click', () => {
-    if (cookies >= upgradeCost) {
-        cookies -= upgradeCost;          
-        cookiesPerSecond += 1;           
-        upgradeCost = Math.floor(upgradeCost * 1.5); 
+    if (size >= upgradeCost) {
+        size -= upgradeCost;
+        sizePerSecond += 1;
+        upgradeCost = Math.floor(upgradeCost * 1.5);
         updateCounter();
         updateUpgradeDisplay();
     } else {
-        alert("Not enough cookies!");
+        alert("Not enough size!");
     }
 });
 
-// Update CPS and upgrade cost display
 function updateUpgradeDisplay() {
     upgradeCostDisplay.textContent = upgradeCost;
-    cpsDisplay.textContent = cookiesPerSecond;
+    cpsDisplay.textContent = sizePerSecond;
+}
+
+// ===== PARTICLE EFFECTS =====
+function createParticle() {
+    const particle = document.createElement('div');
+    particle.classList.add('particle');
+    particle.style.left = Math.random() * blobBtn.width + "px";
+    particle.textContent = "⭐"; // can be any symbol
+    particlesContainer.appendChild(particle);
+
+    setTimeout(() => {
+        particle.remove();
+    }, 1000);
+}
+
+// ===== MILESTONE POPUPS =====
+function checkMilestone() {
+    if (size % 100 === 0) { // every 100 size
+        milestonePopup.textContent = `Milestone reached! Size: ${size}`;
+        milestonePopup.style.opacity = 1;
+        setTimeout(() => milestonePopup.style.opacity = 0, 2000);
+    }
 }
 
 // ===== LOCAL STORAGE =====
-
-// Load saved data
 window.addEventListener('load', () => {
-    const savedCookies = localStorage.getItem('cookies');
-    const savedCPS = localStorage.getItem('cookiesPerSecond');
+    const savedSize = localStorage.getItem('size');
+    const savedSPS = localStorage.getItem('sizePerSecond');
     const savedUpgradeCost = localStorage.getItem('upgradeCost');
 
-    if (savedCookies) cookies = parseInt(savedCookies);
-    if (savedCPS) cookiesPerSecond = parseInt(savedCPS);
+    if (savedSize) size = parseInt(savedSize);
+    if (savedSPS) sizePerSecond = parseInt(savedSPS);
     if (savedUpgradeCost) upgradeCost = parseInt(savedUpgradeCost);
 
     updateCounter();
     updateUpgradeDisplay();
 });
 
-// Save data every 5 seconds
+// Save every 5 seconds
 setInterval(() => {
-    localStorage.setItem('cookies', cookies);
-    localStorage.setItem('cookiesPerSecond', cookiesPerSecond);
+    localStorage.setItem('size', size);
+    localStorage.setItem('sizePerSecond', sizePerSecond);
     localStorage.setItem('upgradeCost', upgradeCost);
 }, 5000);
 
 // Save on page unload
 window.addEventListener('beforeunload', () => {
-    localStorage.setItem('cookies', cookies);
-    localStorage.setItem('cookiesPerSecond', cookiesPerSecond);
+    localStorage.setItem('size', size);
+    localStorage.setItem('sizePerSecond', sizePerSecond);
     localStorage.setItem('upgradeCost', upgradeCost);
 });
