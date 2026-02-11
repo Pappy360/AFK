@@ -1,41 +1,96 @@
+/* ===== BODY & LAYOUT ===== */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Comic Sans MS', 'Arial', sans-serif;
   text-align: center;
-  margin: 40px;
-  background-color: #fffaf0;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(120deg, #ffe7b5, #ffd27f);
   color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 50px;
 }
 
+/* ===== HEADINGS ===== */
 h1 {
-  font-size: 36px;
+  font-size: 48px;
   margin-bottom: 20px;
+  color: #d2691e;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
 
+/* ===== COOKIE COUNTER ===== */
+#cookie-counter {
+  font-size: 32px;
+  font-weight: bold;
+  color: #8b4513;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+}
+
+/* ===== CLICKABLE PNG ===== */
+#cookie-btn {
+  transition: transform 0.2s ease;
+}
+
+#cookie-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Jump animation on click */
+@keyframes jump {
+  0% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-30px) scale(1.2); }
+  60% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+#cookie-btn.jump {
+  animation: jump 0.4s ease;
+}
+
+/* ===== BUTTONS ===== */
 button {
-  padding: 10px 20px;
-  font-size: 18px;
+  padding: 15px 25px;
+  font-size: 20px;
   cursor: pointer;
-  margin-top: 10px;
-  border-radius: 8px;
+  margin: 10px 0;
+  border-radius: 12px;
   border: none;
-  background-color: #ffcc66;
+  background: linear-gradient(to bottom, #ffcc66, #ffb84d);
+  box-shadow: 0 5px #cc9933;
+  transition: all 0.2s ease;
 }
 
 button:hover {
-  background-color: #ffdd88;
+  transform: scale(1.05);
+  box-shadow: 0 8px #cc9933;
 }
 
-/* Upgrade section */
+button:active {
+  transform: scale(0.95);
+  box-shadow: 0 3px #cc9933;
+}
+
+/* ===== UPGRADE CONTAINER ===== */
 #upgrade-container {
   margin-top: 30px;
-  padding: 15px;
-  border: 1px solid #ccc;
-  width: 250px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  display: inline-block;
+  padding: 20px;
+  border-radius: 15px;
+  background-color: #fff3e6;
+  border: 2px solid #f0c27b;
+  box-shadow: 4px 4px 10px rgba(0,0,0,0.2);
+  width: 300px;
 }
 
-#upgrade-btn {
-  margin-top: 10px;
+#upgrade-container h2 {
+  margin-bottom: 15px;
+  color: #d2691e;
+}
+
+#cps-display, #upgrade-cost {
+  font-weight: bold;
+  color: #8b4513;
 }
