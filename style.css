@@ -4,13 +4,19 @@ body {
   text-align: center;
   margin: 0;
   padding: 0;
-  background: linear-gradient(120deg, #ffe7b5, #ffd27f);
-  color: #333;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 50px;
+
+  /* Landscape background */
+  background-image: url('-20.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-blend-mode: lighten;
+  background-color: rgba(255, 231, 181, 0.4);
 }
 
 /* ===== HEADINGS ===== */
@@ -38,6 +44,7 @@ h1 {
   width: 300px; /* 2x bigger */
   transition: transform 0.2s ease;
   cursor: pointer;
+  filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
 }
 
 /* Jump animation */
@@ -50,6 +57,19 @@ h1 {
 
 #blob-btn.jump {
   animation: jump 0.4s ease;
+}
+
+/* Shake animation for emotions */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+#blob-btn.shake {
+  animation: shake 0.3s ease;
 }
 
 /* Particle effects */
