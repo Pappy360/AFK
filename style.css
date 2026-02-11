@@ -1,11 +1,41 @@
 body {
   font-family: Arial, sans-serif;
   text-align: center;
-  margin-top: 50px;
+  margin: 40px;
+  background-color: #fffaf0;
+  color: #333;
+}
+
+h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
 }
 
 button {
-  font-size: 20px;
-  padding: 15px 30px;
+  padding: 10px 20px;
+  font-size: 18px;
   cursor: pointer;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+  background-color: #ffcc66;
+}
+
+button:hover {
+  background-color: #ffdd88;
+}
+
+/* Upgrade section */
+#upgrade-container {
+  margin-top: 30px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  width: 250px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+#upgrade-btn {
+  margin-top: 10px;
 }
