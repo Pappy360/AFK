@@ -1,34 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Blob Clicker</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pappy360 Clicker</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <h1>Blob Clicker</h1>
-
-  <!-- Size Counter -->
-  <p>Size: <span id="size-counter">0</span></p>
-
-  <!-- Clickable Blob PNG -->
   <div id="blob-container">
-    <img id="blob-btn" src="Normal.png" alt="Click me" />
+    <img id="blob-btn" alt="Blob" draggable="false">
   </div>
 
-  <!-- Particle container -->
-  <div id="particles"></div>
-
-  <!-- Upgrade Section -->
   <div id="upgrade-container">
     <h2>Upgrades</h2>
-    <button id="upgrade-btn">Buy CPS Upgrade (Cost: <span id="upgrade-cost">10</span>)</button>
-    <p>CPS: <span id="cps-display">0</span></p>
+    <p>Size per second: <span id="cps-display"></span></p>
+    <p>Upgrade cost: <span id="upgrade-cost"></span></p>
+    <button id="upgrade-btn">Upgrade</button>
   </div>
 
-  <!-- Milestone popup -->
   <div id="milestone-popup"></div>
+
+  <!-- Bed button -->
+  <button id="bed-btn" style="margin-top:20px;">Go to Bed</button>
+
+  <!-- Size display -->
+  <h1 id="size-counter">0</h1>
 
   <script src="script.js"></script>
 </body>
