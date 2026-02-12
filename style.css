@@ -1,3 +1,4 @@
+/* ===== GLOBAL ===== */
 body {
   font-family: 'Comic Sans MS', Arial, sans-serif;
   margin: 0;
@@ -8,39 +9,61 @@ body {
   background-color: white;
   background-image: url('DAY.png');
   background-repeat: no-repeat;
-  background-position: left top;
+  background-position: left bottom;
+}
+
+/* ===== COUNTER ===== */
+#size-counter {
+  font-size: 48px;
+  margin-top: 20px;
+  color: #d2691e;
+}
+
+/* ===== UPGRADE BOX ===== */
+#upgrade-container {
+  margin: 20px auto;
+  padding: 15px;
+  width: 300px;
+
+  background-color: #fff3e6;
+  border: 2px solid #f0c27b;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* ===== BUTTONS ===== */
+button {
+  padding: 12px 20px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+
+  background: linear-gradient(#ffcc66, #ffb84d);
+  box-shadow: 0 4px #cc9933;
+}
+
+button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px #cc9933;
 }
 
 /* ===== BLOB ===== */
 #blob-container {
-  position: absolute;
-  left: 50%;
-  bottom: 20px;
-  transform: translateX(-50%);
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
 }
 
 #blob-btn {
   width: 300px;
   height: auto;
   cursor: pointer;
+  user-select: none;
+  transition: transform 0.15s ease;
 }
 
-/* ===== UPGRADE BOX ===== */
-#upgrade-container {
-  position: absolute;
-  left: 50%;
-  bottom: 350px;
-  transform: translateX(-50%);
-
-  background: #fff3e6;
-  border: 2px solid #f0c27b;
-  border-radius: 12px;
-  padding: 15px;
-  width: 300px;
-}
-
-/* ===== COUNTER ===== */
-#size-counter {
-  margin-top: 20px;
-  font-size: 48px;
+/* click animation */
+#blob-btn:active {
+  transform: scale(1.1);
 }
