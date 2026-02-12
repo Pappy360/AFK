@@ -1,22 +1,21 @@
-/* ===== BODY & LAYOUT ===== */
+/* ===== BODY & BACKGROUND ===== */
 body {
   font-family: 'Comic Sans MS', 'Arial', sans-serif;
-  text-align: center;
   margin: 0;
-  padding: 0;
+  padding: 50px 0 0 0;
+  text-align: center;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 50px;
+  background-color: #fffaf0;
 
-  /* Landscape background */
-  background-image: url('-20.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-blend-mode: lighten;
-  background-color: rgba(255, 231, 181, 0.4);
+  /* Two layers for fade */
+  background-image: url('DAY.png'), url('NIGHT.png');
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+  transition: background 2s ease;
 }
 
 /* ===== HEADINGS ===== */
@@ -27,24 +26,17 @@ h1 {
   text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
 
-/* ===== SIZE COUNTER ===== */
-#size-counter {
-  font-size: 32px;
-  font-weight: bold;
-  color: #8b4513;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-}
-
-/* ===== BLOB IMAGE ===== */
-#blob-container {
-  position: relative;
-}
-
+/* ===== BLOB ===== */
 #blob-btn {
-  width: 300px; /* 2x bigger */
-  transition: transform 0.2s ease;
+  width: 300px;
+  height: 300px;
+  object-fit: contain;
   cursor: pointer;
   filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
+  image-rendering: auto;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  transition: transform 0.2s;
 }
 
 /* Jump animation */
@@ -54,12 +46,9 @@ h1 {
   60% { transform: translateY(0) scale(1); }
   100% { transform: translateY(0) scale(1); }
 }
+#blob-btn.jump { animation: jump 0.4s ease; }
 
-#blob-btn.jump {
-  animation: jump 0.4s ease;
-}
-
-/* Shake animation for emotions */
+/* Shake animation */
 @keyframes shake {
   0% { transform: translateX(0); }
   25% { transform: translateX(-5px); }
@@ -67,23 +56,7 @@ h1 {
   75% { transform: translateX(-5px); }
   100% { transform: translateX(0); }
 }
-
-#blob-btn.shake {
-  animation: shake 0.3s ease;
-}
-
-/* Particle effects */
-.particle {
-  position: absolute;
-  font-size: 24px;
-  animation: floatUp 1s ease-out forwards;
-  pointer-events: none;
-}
-
-@keyframes floatUp {
-  0% { opacity: 1; transform: translateY(0) scale(1); }
-  100% { opacity: 0; transform: translateY(-50px) scale(0.5); }
-}
+#blob-btn.shake { animation: shake 0.3s ease; }
 
 /* ===== BUTTONS ===== */
 button {
