@@ -2,19 +2,14 @@
 body {
   font-family: 'Comic Sans MS', 'Arial', sans-serif;
   margin: 0;
-  padding: 50px 0 0 0;
-  text-align: center;
+  padding: 0;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #fffaf0;
-
-  /* Two layers for fade */
+  text-align: center;
+  background-color: #ffffff; /* white background for empty areas */
   background-image: url('DAY.png'), url('NIGHT.png');
-  background-size: cover, cover;
-  background-position: center, center;
   background-repeat: no-repeat, no-repeat;
+  background-position: left top, left top;
+  background-size: auto, auto; /* keep natural size */
   transition: background 2s ease;
 }
 
@@ -27,16 +22,20 @@ h1 {
 }
 
 /* ===== BLOB ===== */
+#blob-container {
+  position: absolute;
+  left: 50%;
+  bottom: 20px; /* adjust to match ground in background */
+  transform: translateX(-50%);
+}
+
 #blob-btn {
   width: 300px;
-  height: 300px;
+  height: auto;
   object-fit: contain;
   cursor: pointer;
   filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
-  image-rendering: auto;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  transition: transform 0.2s;
+  transition: transform 0.2s ease;
 }
 
 /* Jump animation */
@@ -71,18 +70,15 @@ button {
   transition: all 0.2s ease;
 }
 
-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px #cc9933;
-}
-
-button:active {
-  transform: scale(0.95);
-  box-shadow: 0 3px #cc9933;
-}
+button:hover { transform: scale(1.05); box-shadow: 0 8px #cc9933; }
+button:active { transform: scale(0.95); box-shadow: 0 3px #cc9933; }
 
 /* ===== UPGRADE CONTAINER ===== */
 #upgrade-container {
+  position: absolute;
+  bottom: 150px; /* above the blob */
+  left: 50%;
+  transform: translateX(-50%);
   margin-top: 30px;
   padding: 20px;
   border-radius: 15px;
@@ -92,15 +88,8 @@ button:active {
   width: 300px;
 }
 
-#upgrade-container h2 {
-  margin-bottom: 15px;
-  color: #d2691e;
-}
-
-#cps-display, #upgrade-cost {
-  font-weight: bold;
-  color: #8b4513;
-}
+#upgrade-container h2 { margin-bottom: 15px; color: #d2691e; }
+#cps-display, #upgrade-cost { font-weight: bold; color: #8b4513; }
 
 /* Milestone popup */
 #milestone-popup {
