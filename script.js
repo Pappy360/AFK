@@ -1,175 +1,109 @@
-// ===== Blob Images =====
-const blobImages = {
-  normal: "NORMAL.png",
-  happy: "HAPPY.png",
-  amazed: "AMAZED.png",
-  sad: "SAD.png",
-  sleepy: "SLEEPY.png"
-};
-
-// ===== DOM Elements =====
-const blobBtn = document.getElementById('blob-btn');
-const sizeCounter = document.getElementById('size-counter');
-const upgradeBtn = document.getElementById('upgrade-btn');
-const upgradeCostDisplay = document.getElementById('upgrade-cost');
-const cpsDisplay = document.getElementById('cps-display');
-const milestonePopup = document.getElementById('milestone-popup');
-const bedBtn = document.getElementById('bed-btn');
-
-// ===== Game Variables =====
-let size = 0;
-let sizePerSecond = 0;
-let upgradeCost = 10;
-
-// Mood & Sadness
-let isSad = false;
-let lastClickTime = Date.now();
-
-// Day/Night
-let isNight = false;
-const CYCLE_DURATION = 20 * 60 * 1000; // 20 minutes
-let cycleStartTime = Date.now();
-
-// Night penalties
-const SAD_CPS_MULTIPLIER = 0.5;
-const NIGHT_CLICK_PENALTY = 5;
-
-// Set default image
-blobBtn.src = blobImages.normal;
-
-// ===== Update Functions =====
-function updateCounter() {
-  sizeCounter.textContent = size;
-}
-function updateUpgradeDisplay() {
-  upgradeCostDisplay.textContent = upgradeCost;
-  cpsDisplay.textContent = sizePerSecond;
+/* ===== BODY & BACKGROUND ===== */
+body {
+  font-family: 'Comic Sans MS', 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  text-align: center;
+  background-color: #ffffff; /* white background for empty areas */
+  background-image: url('DAY.png'), url('NIGHT.png');
+  background-repeat: no-repeat, no-repeat;
+  background-position: left top, left top;
+  background-size: auto, auto; /* keep natural size */
+  transition: background 2s ease;
 }
 
-// ===== Blob Click =====
-blobBtn.addEventListener('click', () => {
-  const now = Date.now();
-  lastClickTime = now;
-
-  // If night, clicking loses size
-  if (isNight) {
-    size -= NIGHT_CLICK_PENALTY;
-    showTemporaryEmotion('sad', 800);
-  } else {
-    size++;
-    if (isSad) { isSad = false; blobBtn.src = blobImages.normal; }
-  }
-
-  updateCounter();
-
-  // Jump animation
-  blobBtn.classList.add('jump');
-  setTimeout(() => blobBtn.classList.remove('jump'), 400);
-
-  checkMilestone();
-});
-
-// ===== Upgrades =====
-upgradeBtn.addEventListener('click', () => {
-  if (size >= upgradeCost) {
-    size -= upgradeCost;
-    sizePerSecond += 1;
-    upgradeCost = Math.floor(upgradeCost * 1.5);
-    updateCounter();
-    updateUpgradeDisplay();
-    showTemporaryEmotion('amazed', 800);
-  } else {
-    alert("Not enough size!");
-  }
-});
-
-// ===== Mood / Emotions =====
-function showTemporaryEmotion(emotion, duration = 1000) {
-  blobBtn.src = blobImages[emotion];
-  blobBtn.classList.add('shake');
-  setTimeout(() => {
-    blobBtn.src = isNight ? blobImages.sleepy : blobImages.normal;
-    blobBtn.classList.remove('shake');
-  }, duration);
+/* ===== HEADINGS ===== */
+h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: #d2691e;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
 
-// SAD if neglected
-setInterval(() => {
-  if (!isSad && !isNight && Date.now() - lastClickTime > 5000) {
-    isSad = true;
-    blobBtn.src = blobImages.sad;
-  }
-}, 500);
-
-// ===== Milestones =====
-function checkMilestone() {
-  if (size % 100 === 0 && size !== 0) {
-    milestonePopup.textContent = `Milestone reached! Size: ${size}`;
-    milestonePopup.style.opacity = 1;
-    showTemporaryEmotion('happy', 1200);
-    setTimeout(() => milestonePopup.style.opacity = 0, 2000);
-  }
+/* ===== BLOB ===== */
+#blob-container {
+  position: absolute;
+  left: 50%;
+  bottom: 20px; /* adjust to match ground in background */
+  transform: translateX(-50%);
 }
 
-// ===== Day/Night Cycle =====
-function updateDayNight() {
-  const now = Date.now();
-  const elapsed = (now - cycleStartTime) % CYCLE_DURATION;
-  const newIsNight = elapsed > CYCLE_DURATION / 2;
-
-  if (newIsNight !== isNight) {
-    isNight = newIsNight;
-    blobBtn.src = isNight ? blobImages.sleepy : blobImages.normal;
-
-    // Update background with fade
-    document.body.style.backgroundImage = `url('${isNight ? 'NIGHT.png' : 'DAY.png'}'), url('${isNight ? 'DAY.png' : 'NIGHT.png'}')`;
-  }
+#blob-btn {
+  width: 300px;
+  height: auto;
+  object-fit: contain;
+  cursor: pointer;
+  filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
+  transition: transform 0.2s ease;
 }
-setInterval(updateDayNight, 1000);
 
-// ===== Auto CPS =====
-setInterval(() => {
-  const multiplier = isNight ? SAD_CPS_MULTIPLIER : 1;
-  size += sizePerSecond * multiplier;
-  updateCounter();
-}, 1000);
+/* Jump animation */
+@keyframes jump {
+  0% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-50px) scale(1.2); }
+  60% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(0) scale(1); }
+}
+#blob-btn.jump { animation: jump 0.4s ease; }
 
-// ===== Bed Button =====
-bedBtn.addEventListener('click', () => {
-  if (isNight) {
-    // Skip to day
-    const now = Date.now();
-    cycleStartTime = now - (CYCLE_DURATION / 2) + 1000;
-    isNight = false;
-    blobBtn.src = blobImages.normal;
-    document.body.style.backgroundImage = `url('DAY.png'), url('NIGHT.png')`;
-  }
-});
+/* Shake animation */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+#blob-btn.shake { animation: shake 0.3s ease; }
 
-// ===== Local Storage =====
-window.addEventListener('load', () => {
-  const savedSize = localStorage.getItem('size');
-  const savedSPS = localStorage.getItem('sizePerSecond');
-  const savedUpgradeCost = localStorage.getItem('upgradeCost');
-  const savedCycle = localStorage.getItem('cycleStartTime');
-  const savedIsNight = localStorage.getItem('isNight');
+/* ===== BUTTONS ===== */
+button {
+  padding: 15px 25px;
+  font-size: 20px;
+  cursor: pointer;
+  margin: 10px 0;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(to bottom, #ffcc66, #ffb84d);
+  box-shadow: 0 5px #cc9933;
+  transition: all 0.2s ease;
+}
 
-  if (savedSize) size = parseInt(savedSize);
-  if (savedSPS) sizePerSecond = parseInt(savedSPS);
-  if (savedUpgradeCost) upgradeCost = parseInt(savedUpgradeCost);
-  if (savedCycle) cycleStartTime = parseInt(savedCycle);
-  if (savedIsNight) isNight = savedIsNight === 'true';
+button:hover { transform: scale(1.05); box-shadow: 0 8px #cc9933; }
+button:active { transform: scale(0.95); box-shadow: 0 3px #cc9933; }
 
-  updateCounter();
-  updateUpgradeDisplay();
-  blobBtn.src = isNight ? blobImages.sleepy : blobImages.normal;
-});
+/* ===== UPGRADE CONTAINER ===== */
+#upgrade-container {
+  position: absolute;
+  bottom: 150px; /* above the blob */
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 30px;
+  padding: 20px;
+  border-radius: 15px;
+  background-color: #fff3e6;
+  border: 2px solid #f0c27b;
+  box-shadow: 4px 4px 10px rgba(0,0,0,0.2);
+  width: 300px;
+}
 
-// Auto-save
-setInterval(() => {
-  localStorage.setItem('size', size);
-  localStorage.setItem('sizePerSecond', sizePerSecond);
-  localStorage.setItem('upgradeCost', upgradeCost);
-  localStorage.setItem('cycleStartTime', cycleStartTime);
-  localStorage.setItem('isNight', isNight);
-}, 5000);
+#upgrade-container h2 { margin-bottom: 15px; color: #d2691e; }
+#cps-display, #upgrade-cost { font-weight: bold; color: #8b4513; }
+
+/* Milestone popup */
+#milestone-popup {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffeb99;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 20px;
+  color: #8b4513;
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+}
