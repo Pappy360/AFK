@@ -1,134 +1,175 @@
-// ===== SIZE CLICKER CORE =====
-let size = 0;
-let sizePerSecond = 0;
+// ===== Blob Images =====
+const blobImages = {
+  normal: "NORMAL.png",
+  happy: "HAPPY.png",
+  amazed: "AMAZED.png",
+  sad: "SAD.png",
+  sleepy: "SLEEPY.png"
+};
 
-// DOM elements
+// ===== DOM Elements =====
 const blobBtn = document.getElementById('blob-btn');
 const sizeCounter = document.getElementById('size-counter');
 const upgradeBtn = document.getElementById('upgrade-btn');
 const upgradeCostDisplay = document.getElementById('upgrade-cost');
 const cpsDisplay = document.getElementById('cps-display');
-const particlesContainer = document.getElementById('particles');
 const milestonePopup = document.getElementById('milestone-popup');
+const bedBtn = document.getElementById('bed-btn');
 
-// Initial upgrade cost
+// ===== Game Variables =====
+let size = 0;
+let sizePerSecond = 0;
 let upgradeCost = 10;
 
-// ===== CLICK BLOB =====
-blobBtn.addEventListener('click', () => {
-    size++;
-    updateCounter();
+// Mood & Sadness
+let isSad = false;
+let lastClickTime = Date.now();
 
-    // Jump animation
-    blobBtn.classList.add('jump');
-    setTimeout(() => blobBtn.classList.remove('jump'), 400);
+// Day/Night
+let isNight = false;
+const CYCLE_DURATION = 20 * 60 * 1000; // 20 minutes
+let cycleStartTime = Date.now();
 
-    // Particle effect
-    createParticle();
+// Night penalties
+const SAD_CPS_MULTIPLIER = 0.5;
+const NIGHT_CLICK_PENALTY = 5;
 
-    // Milestones
-    checkMilestone();
+// Set default image
+blobBtn.src = blobImages.normal;
 
-    // Update blob emotion
-    updateBlobEmotion();
-});
-
-// Update counter
+// ===== Update Functions =====
 function updateCounter() {
-    sizeCounter.textContent = size;
+  sizeCounter.textContent = size;
+}
+function updateUpgradeDisplay() {
+  upgradeCostDisplay.textContent = upgradeCost;
+  cpsDisplay.textContent = sizePerSecond;
 }
 
-// ===== AUTO-INCREMENT (CPS) =====
-setInterval(() => {
-    size += sizePerSecond;
-    updateCounter();
-}, 1000);
+// ===== Blob Click =====
+blobBtn.addEventListener('click', () => {
+  const now = Date.now();
+  lastClickTime = now;
 
-// ===== UPGRADES =====
-upgradeBtn.addEventListener('click', () => {
-    if (size >= upgradeCost) {
-        size -= upgradeCost;
-        sizePerSecond += 1;
-        upgradeCost = Math.floor(upgradeCost * 1.5);
-        updateCounter();
-        updateUpgradeDisplay();
+  // If night, clicking loses size
+  if (isNight) {
+    size -= NIGHT_CLICK_PENALTY;
+    showTemporaryEmotion('sad', 800);
+  } else {
+    size++;
+    if (isSad) { isSad = false; blobBtn.src = blobImages.normal; }
+  }
 
-        // Show amazed emotion briefly
-        showTemporaryEmotion('Amazed.png', 800);
-    } else {
-        alert("Not enough size!");
-    }
+  updateCounter();
+
+  // Jump animation
+  blobBtn.classList.add('jump');
+  setTimeout(() => blobBtn.classList.remove('jump'), 400);
+
+  checkMilestone();
 });
 
-function updateUpgradeDisplay() {
-    upgradeCostDisplay.textContent = upgradeCost;
-    cpsDisplay.textContent = sizePerSecond;
-}
-
-// ===== PARTICLE EFFECTS =====
-function createParticle() {
-    const particle = document.createElement('div');
-    particle.classList.add('particle');
-    particle.style.left = Math.random() * blobBtn.width + "px";
-    particle.textContent = "⭐";
-    particlesContainer.appendChild(particle);
-
-    setTimeout(() => particle.remove(), 1000);
-}
-
-// ===== MILESTONE POPUPS =====
-function checkMilestone() {
-    if (size % 100 === 0 && size !== 0) {
-        milestonePopup.textContent = `Milestone reached! Size: ${size}`;
-        milestonePopup.style.opacity = 1;
-        showTemporaryEmotion('Happy.png', 1200); // happy emotion
-        setTimeout(() => milestonePopup.style.opacity = 0, 2000);
-    }
-}
-
-// ===== BLOB EMOTIONS =====
-function updateBlobEmotion() {
-    // Random chance for Sus emotion
-    if (Math.random() < 0.02) {
-        showTemporaryEmotion('Sus.png', 1000);
-    }
-    // Scared on fast clicks (optional)
-    // Else default to normal
-}
-
-function showTemporaryEmotion(src, duration = 1000) {
-    blobBtn.src = src;
-    blobBtn.classList.add('shake'); // add shake effect
-    setTimeout(() => {
-        blobBtn.src = 'Normal.png';
-        blobBtn.classList.remove('shake');
-    }, duration);
-}
-
-// ===== LOCAL STORAGE =====
-window.addEventListener('load', () => {
-    const savedSize = localStorage.getItem('size');
-    const savedSPS = localStorage.getItem('sizePerSecond');
-    const savedUpgradeCost = localStorage.getItem('upgradeCost');
-
-    if (savedSize) size = parseInt(savedSize);
-    if (savedSPS) sizePerSecond = parseInt(savedSPS);
-    if (savedUpgradeCost) upgradeCost = parseInt(savedUpgradeCost);
-
+// ===== Upgrades =====
+upgradeBtn.addEventListener('click', () => {
+  if (size >= upgradeCost) {
+    size -= upgradeCost;
+    sizePerSecond += 1;
+    upgradeCost = Math.floor(upgradeCost * 1.5);
     updateCounter();
     updateUpgradeDisplay();
+    showTemporaryEmotion('amazed', 800);
+  } else {
+    alert("Not enough size!");
+  }
 });
 
-// Save every 5 seconds
+// ===== Mood / Emotions =====
+function showTemporaryEmotion(emotion, duration = 1000) {
+  blobBtn.src = blobImages[emotion];
+  blobBtn.classList.add('shake');
+  setTimeout(() => {
+    blobBtn.src = isNight ? blobImages.sleepy : blobImages.normal;
+    blobBtn.classList.remove('shake');
+  }, duration);
+}
+
+// SAD if neglected
 setInterval(() => {
-    localStorage.setItem('size', size);
-    localStorage.setItem('sizePerSecond', sizePerSecond);
-    localStorage.setItem('upgradeCost', upgradeCost);
-}, 5000);
+  if (!isSad && !isNight && Date.now() - lastClickTime > 5000) {
+    isSad = true;
+    blobBtn.src = blobImages.sad;
+  }
+}, 500);
 
-// Save on page unload
-window.addEventListener('beforeunload', () => {
-    localStorage.setItem('size', size);
-    localStorage.setItem('sizePerSecond', sizePerSecond);
-    localStorage.setItem('upgradeCost', upgradeCost);
+// ===== Milestones =====
+function checkMilestone() {
+  if (size % 100 === 0 && size !== 0) {
+    milestonePopup.textContent = `Milestone reached! Size: ${size}`;
+    milestonePopup.style.opacity = 1;
+    showTemporaryEmotion('happy', 1200);
+    setTimeout(() => milestonePopup.style.opacity = 0, 2000);
+  }
+}
+
+// ===== Day/Night Cycle =====
+function updateDayNight() {
+  const now = Date.now();
+  const elapsed = (now - cycleStartTime) % CYCLE_DURATION;
+  const newIsNight = elapsed > CYCLE_DURATION / 2;
+
+  if (newIsNight !== isNight) {
+    isNight = newIsNight;
+    blobBtn.src = isNight ? blobImages.sleepy : blobImages.normal;
+
+    // Update background with fade
+    document.body.style.backgroundImage = `url('${isNight ? 'NIGHT.png' : 'DAY.png'}'), url('${isNight ? 'DAY.png' : 'NIGHT.png'}')`;
+  }
+}
+setInterval(updateDayNight, 1000);
+
+// ===== Auto CPS =====
+setInterval(() => {
+  const multiplier = isNight ? SAD_CPS_MULTIPLIER : 1;
+  size += sizePerSecond * multiplier;
+  updateCounter();
+}, 1000);
+
+// ===== Bed Button =====
+bedBtn.addEventListener('click', () => {
+  if (isNight) {
+    // Skip to day
+    const now = Date.now();
+    cycleStartTime = now - (CYCLE_DURATION / 2) + 1000;
+    isNight = false;
+    blobBtn.src = blobImages.normal;
+    document.body.style.backgroundImage = `url('DAY.png'), url('NIGHT.png')`;
+  }
 });
+
+// ===== Local Storage =====
+window.addEventListener('load', () => {
+  const savedSize = localStorage.getItem('size');
+  const savedSPS = localStorage.getItem('sizePerSecond');
+  const savedUpgradeCost = localStorage.getItem('upgradeCost');
+  const savedCycle = localStorage.getItem('cycleStartTime');
+  const savedIsNight = localStorage.getItem('isNight');
+
+  if (savedSize) size = parseInt(savedSize);
+  if (savedSPS) sizePerSecond = parseInt(savedSPS);
+  if (savedUpgradeCost) upgradeCost = parseInt(savedUpgradeCost);
+  if (savedCycle) cycleStartTime = parseInt(savedCycle);
+  if (savedIsNight) isNight = savedIsNight === 'true';
+
+  updateCounter();
+  updateUpgradeDisplay();
+  blobBtn.src = isNight ? blobImages.sleepy : blobImages.normal;
+});
+
+// Auto-save
+setInterval(() => {
+  localStorage.setItem('size', size);
+  localStorage.setItem('sizePerSecond', sizePerSecond);
+  localStorage.setItem('upgradeCost', upgradeCost);
+  localStorage.setItem('cycleStartTime', cycleStartTime);
+  localStorage.setItem('isNight', isNight);
+}, 5000);
