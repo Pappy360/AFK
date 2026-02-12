@@ -10,6 +10,9 @@ body {
   background-image: url('DAY.png');
   background-repeat: no-repeat;
   background-position: left bottom;
+  background-position: center center;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 /* ===== COUNTER ===== */
@@ -35,35 +38,3 @@ body {
 button {
   padding: 12px 20px;
   font-size: 18px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-
-  background: linear-gradient(#ffcc66, #ffb84d);
-  box-shadow: 0 4px #cc9933;
-}
-
-button:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px #cc9933;
-}
-
-/* ===== BLOB ===== */
-#blob-container {
-  margin-top: 40px;
-  display: flex;
-  justify-content: center;
-}
-
-#blob-btn {
-  width: 300px;
-  height: auto;
-  cursor: pointer;
-  user-select: none;
-  transition: transform 0.15s ease;
-}
-
-/* click animation */
-#blob-btn:active {
-  transform: scale(1.1);
-}
